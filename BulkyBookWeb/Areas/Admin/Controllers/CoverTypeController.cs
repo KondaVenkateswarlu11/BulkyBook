@@ -4,20 +4,21 @@ using BulkyBook.Models;
 
 using Microsoft.AspNetCore.Mvc;
 
-namespace BulkyBookWeb.Controllers
+namespace BulkyBookWeb.Areas.Admin.Controllers
 {
-    public class CategoryController : Controller
+    [Area("Admin")]
+    public class CoverTypeController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
-        public CategoryController(IUnitOfWork unitOfWork)
+        public CoverTypeController(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
         }
-    
+
         public IActionResult Index()
         {
-            IEnumerable<Category> objCategoryList = _unitOfWork.Category.GetAll();
-            return View(objCategoryList);
+            IEnumerable<CoverType> objCoverTypeList = _unitOfWork.CoverType.GetAll();
+            return View(objCoverTypeList);
         }
 
         //GET
@@ -28,51 +29,43 @@ namespace BulkyBookWeb.Controllers
         //POST
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(Category obj)
+        public IActionResult Create(CoverType obj)
         {
-            if(obj.Name == obj.DisplayOrder.ToString())
-            {
-                ModelState.AddModelError("Name", "Name and DisplayOrder Cannot be Same");
-            }
             if (ModelState.IsValid)
             {
-                _unitOfWork.Category.Add(obj);
+                _unitOfWork.CoverType.Add(obj);
                 _unitOfWork.Save();
-                TempData["success"] = "Category Created Successfully";
+                TempData["success"] = "CoverType Created Successfully";
                 return RedirectToAction("Index");
             }
             return View(obj);
-            
+
         }
 
         //GET
         public IActionResult Edit(int? id)
         {
-            if (id == null || id == 0) 
+            if (id == null || id == 0)
             {
                 return NotFound();
             }
-            var CategoryFromDb = _unitOfWork.Category.GetFirstOrDefault(u => u.Id == id);
-            if(CategoryFromDb == null)
+            var CoverTypeFromDb = _unitOfWork.CoverType.GetFirstOrDefault(u => u.Id == id);
+            if (CoverTypeFromDb == null)
             {
                 return NotFound();
             }
-            return View(CategoryFromDb);
+            return View(CoverTypeFromDb);
         }
         //POST
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(Category obj)
+        public IActionResult Edit(CoverType obj)
         {
-            if (obj.Name == obj.DisplayOrder.ToString())
-            {
-                ModelState.AddModelError("Name", "Name and DisplayOrder Cannot be Same");
-            }
             if (ModelState.IsValid)
             {
-                _unitOfWork.Category.Update(obj);
+                _unitOfWork.CoverType.Update(obj);
                 _unitOfWork.Save();
-                TempData["success"] = "Category updated Successfully";
+                TempData["success"] = "CoverType updated Successfully";
                 return RedirectToAction("Index");
             }
             return View(obj);
@@ -84,26 +77,26 @@ namespace BulkyBookWeb.Controllers
             {
                 return NotFound();
             }
-            var CategoryFromDb = _unitOfWork.Category.GetFirstOrDefault(u => u.Id == id);
-            if (CategoryFromDb == null)
+            var CoverTypeFromDb = _unitOfWork.CoverType.GetFirstOrDefault(u => u.Id == id);
+            if (CoverTypeFromDb == null)
             {
                 return NotFound();
             }
-            return View(CategoryFromDb);
+            return View(CoverTypeFromDb);
         }
         //POST
-        [HttpPost,ActionName("Delete")]
+        [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public IActionResult DeletePost(int? id)
         {
-            var obj = _unitOfWork.Category.GetFirstOrDefault(u => u.Id == id);
-            if(obj == null)
+            var obj = _unitOfWork.CoverType.GetFirstOrDefault(u => u.Id == id);
+            if (obj == null)
             {
                 return NotFound();
             }
-            _unitOfWork.Category.Remove(obj);
+            _unitOfWork.CoverType.Remove(obj);
             _unitOfWork.Save();
-            TempData["success"] = "Category Deleted Successfully";
+            TempData["success"] = "CoverType Deleted Successfully";
             return RedirectToAction("Index");
         }
     }
