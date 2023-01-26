@@ -28,13 +28,13 @@ namespace BulkyBookWeb.Areas.Customer.Controllers
             ShoppingCart cartObj = new()
             {
                 Count = 1,
-              
+                
                 Product = _unitOfWork.Product.GetFirstOrDefault(u => u.Id == productId, includeProperties: "Category,CoverType"),
-       
             };
-			return View(cartObj);
+
+            return View(cartObj);
         }
-		public IActionResult Privacy()
+        public IActionResult Privacy()
         {
             return View();
         }
