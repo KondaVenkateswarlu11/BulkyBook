@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using BulkyBook.Utility;
+using Stripe;
 
 internal class Program
 {
@@ -19,7 +20,9 @@ internal class Program
             builder.Configuration.GetConnectionString("DefaultConnection")
         ));
 
-        builder.Services.AddIdentity<IdentityUser,IdentityRole>().AddDefaultTokenProviders()
+		builder.Services.Configure<StripeSettings>(builder.Configuration.GetSection("Stripe"));
+
+		builder.Services.AddIdentity<IdentityUser,IdentityRole>().AddDefaultTokenProviders()
             .AddEntityFrameworkStores<ApplicationDbContext>();
 
 
@@ -50,7 +53,9 @@ internal class Program
 
         app.UseRouting();
 
-        app.UseAuthentication();
+		StripeConfiguration.ApiKey = builder.Configuration.GetSection("Stripe:SecretKey").Get<string>();
+
+		app.UseAuthentication();
         app.UseAuthorization();
 
         app.MapRazorPages();
