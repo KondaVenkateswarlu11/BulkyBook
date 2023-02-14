@@ -1,5 +1,6 @@
 ﻿using BulkyBook.DataAccess.Repository.IRepository;
 using BulkyBook.Models;
+using BulkyBook.Models.ViewModels;
 using BulkyBook.Utility;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -13,6 +14,8 @@ namespace BulkyBookWeb.Areas.Admin.Controllers
     {
 
         private readonly IUnitOfWork _unitOfWork;
+        [BindProperty]
+        public OrderVM OrderVM { get; set; }
         public OrderController(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
@@ -23,8 +26,45 @@ namespace BulkyBookWeb.Areas.Admin.Controllers
             return View();
         }
 
-        #region API CALLS
-        [HttpGet]
+
+        public IActionResult Details(int id)
+        {
+            OrderVM = new OrderVM()
+            {
+                OrderHeader = _unitOfWork.OrderHeader.GetFirstOrDefault(u => u.Id == id, includeProperties: "ApplicationUser"),
+                OrderDetail = _unitOfWork.OrderDetail.GetAll(u => u.Id == id, includeProperties: "Product"),
+            };
+            return View(OrderVM);
+        }
+
+
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		public IActionResult UpdateOrderDetail()
+		{
+			var orderHEaderFromDb = _unitOfWork.OrderHeader.GetFirstOrDefault(u => u.Id == OrderVM.OrderHeader.Id, tracked: false);
+			orderHEaderFromDb.Name = OrderVM.OrderHeader.Name;
+			orderHEaderFromDb.PhoneNumber = OrderVM.OrderHeader.PhoneNumber;
+			orderHEaderFromDb.StreetAddress = OrderVM.OrderHeader.StreetAddress;
+			orderHEaderFromDb.City = OrderVM.OrderHeader.City;
+			orderHEaderFromDb.State = OrderVM.OrderHeader.State;
+			orderHEaderFromDb.PostalCode = OrderVM.OrderHeader.PostalCode;
+			if (OrderVM.OrderHeader.Carrier != null)
+			{
+				orderHEaderFromDb.Carrier = OrderVM.OrderHeader.Carrier;
+			}
+			if (OrderVM.OrderHeader.TrackingNumber != null)
+			{
+				orderHEaderFromDb.TrackingNumber = OrderVM.OrderHeader.TrackingNumber;
+			}
+			_unitOfWork.OrderHeader.Update(orderHEaderFromDb);
+			_unitOfWork.Save();
+			TempData["Success"] = "Order Details Updated Successfully.";
+			return RedirectToAction("Details", "Order", new { id = orderHEaderFromDb.Id });
+		}
+
+		#region API CALLS
+		[HttpGet]
         public IActionResult GetAll(string status)
         {
             IEnumerable<OrderHeader> orderHeaders;

@@ -12,7 +12,7 @@ namespace BulkyBook.DataAccess.Repository.IRepository
         //Lets Assume T is a Category here 
         IEnumerable<T> GetAll(Expression<Func<T, bool>>? filter =null, string? includeProperties = null);
         void Add(T entity);
-        T GetFirstOrDefault(Expression<Func<T, bool>> filter, string? includeProperties = null);
+        T GetFirstOrDefault(Expression<Func<T, bool>> filter, string? includeProperties = null, bool tracked = true);
         void Remove(T entity);
         void RemoveRange(IEnumerable<T> entities);
 
