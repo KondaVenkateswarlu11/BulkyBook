@@ -1,1 +1,10 @@
-# here all the pipeline scripts will be available
+pipeline{
+    agent any
+    stages{
+        stage("firststage"){
+            steps{
+                echo "Welcome to fisrtpipeline"
+            }
+        }
+    }
+}
