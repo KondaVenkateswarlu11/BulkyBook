@@ -1,10 +1,13 @@
 pipeline{
-    agent any
+    agent{
+        label 'jenkins'
+    }
     stages{
-        stage("firststage"){
+        stage('labelstage'){
             steps{
-                echo "Welcome to fisrtpipeline"
+                sh 'hostname -i'
             }
         }
+        
     }
 }
