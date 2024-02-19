@@ -7,7 +7,8 @@ pipeline{
             }
         }
         stage("script stage"){
-            script{
+            steps{
+                script{
                 echo "here im writing the actual script code"
                 def course = "k8s"
                 if(course == "k8s"){
@@ -18,6 +19,8 @@ pipeline{
                     sh 'sleep 5'
                 }
                 echo "pipeline successsfully completed.........."
+
+            }
 
             }
         }
