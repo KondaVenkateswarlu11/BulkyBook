@@ -1,19 +1,24 @@
 pipeline{
     agent any
     stages{
-        stage("Example of retry and timout stage"){
+        stage("Example of retry and timeout stage"){
             steps{
-                retry(4){
-                    echo "retry block started again:"
+               
+                    retry(4){
+                        try {
+                            echo "retry block started again:"
 
-                    timeout(time: 5, unit: 'SECONDS'){
-                        echo "printing the timout block"
+                            timeout(time: 5, unit: 'SECONDS'){
+                                echo "printing the timeout block"
 
-                        sleep 60
+                                sleep 60
+                            }
+                        } catch (FlowInterruptedException e) {
+                            // handle the timeout error
+                            error 'Timeout!'
+                        }
                     }
-                    
                 }
             }
         }
-    }
 }
