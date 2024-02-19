@@ -5,7 +5,6 @@ pipeline{
             agent{
                 node{
                     label 'jenkins'
-                    customWorkspace "/home/"
                 }
             }
             steps{
