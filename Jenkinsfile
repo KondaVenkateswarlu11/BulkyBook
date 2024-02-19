@@ -1,20 +1,19 @@
 pipeline{
     agent any
     stages{
-        stage("Starting Stage"){
+        stage("Example of retry and timout stage"){
             steps{
-                echo "Started the pipeline"
-            }
-        }
-        stage("retry stage"){
-            steps{
-                retry(3){
-                    echo "Welocme to Pipeline"
-                    error "Testing the Retry block"
-                }
-                echo "Printing after 3 retries..................."
-            }
-        }
+                retry(4){
+                    echo "retry block started again:"
 
+                    timeout(time: 5, unit: 'SECONDS'){
+                        echo "printing the timout block"
+
+                        sleep 60
+                    }
+                    
+                }
+            }
+        }
     }
 }
