@@ -11,7 +11,7 @@ pipeline{
             script{
                 echo "here im writing the actual script code"
                 def course = "k8s"
-                id(course == "k8s"){
+                if(course == "k8s"){
                     println ("Thanks for enrolling to ${course}")
                 }
                 else{
