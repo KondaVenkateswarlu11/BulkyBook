@@ -1,15 +1,17 @@
 pipeline{
-    agent{
-        label 'jenkins'
-    }
+    agent none
     stages{
-        stage('labelstage'){
+        stage("build stage"){
+            agent{
+                node{
+                    label 'jenkins'
+                }
             steps{
+                echo "This is stage is running in jenkins master node"
                 sh 'hostname -i'
+                git 'https://github.com/KondaVenkateswarlu11/BulkyBook.git'
+            }
             }
         }
-        
     }
 }
-
-
