@@ -7,7 +7,6 @@ pipeline{
             }
         }
         stage("script stage"){
-            echo "script stage started"
             script{
                 echo "here im writing the actual script code"
                 def course = "k8s"
