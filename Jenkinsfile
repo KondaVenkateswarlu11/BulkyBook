@@ -1,24 +1,24 @@
 pipeline{
-    agent any
+    agent {
+        label 'jenkins'
+    }
+    tools{
+        maven 'Maven 3.8.8'
+    }
+    environment{
+        name = venkat
+        course = devops
+    }
     stages{
-        stage("Example of retry and timeout stage"){
+        stage("Build Stage"){
+            environment{
+                cloud = gcp
+            }
             steps{
-               
-                    retry(4){
-                        try {
-                            echo "retry block started again:"
-
-                            timeout(time: 5, unit: 'SECONDS'){
-                                echo "printing the timeout block"
-
-                                sleep 60
-                            }
-                        } catch (FlowInterruptedException e) {
-                            // handle the timeout error
-                            error 'Timeout!'
-                        }
-                    }
-                }
+                echo "Welcome Mr.${name}"
+                echo "Thanks for enrolling to the ${course} course"
+                echo " certified in ${cloud}"
             }
         }
+    }
 }
